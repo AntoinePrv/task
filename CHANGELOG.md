@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added the "gentle force" experiment as a draft (#1200, #1216 by @pd93).
+
 ## v3.26.0 - 2023-06-10
 
 - Only rewrite checksum files in `.task` if the checksum has changed (#1185,
@@ -13,8 +17,8 @@
   [Documentation](https://taskfile.dev/usage/#warning-prompts)).
 - Added support for single command task syntax. With this change, it's now
   possible to declare just `cmd:` in a task, avoiding the more complex
-  `cmds: []` when you have only a single command for that task
-  (#1130, #1131 by @timdp).
+  `cmds: []` when you have only a single command for that task (#1130, #1131 by
+  @timdp).
 
 ## v3.25.0 - 2023-05-22
 
