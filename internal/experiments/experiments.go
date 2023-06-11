@@ -12,11 +12,11 @@ import (
 const envPrefix = "TASK_X_"
 
 const (
-// TestExperiment = "TEST_EXPERIMENT"
+	GentleForce = "GENTLE_FORCE"
 )
 
 var flags = map[string]bool{
-	// TestExperiment: false,
+	GentleForce: false,
 }
 
 func IsEnabled(xName string) bool {
