@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
 	"github.com/joho/godotenv"
@@ -12,49 +11,39 @@ import (
 
 const envPrefix = "TASK_X_"
 
-var Flags struct{}
+const (
+// TestExperiment = "TEST_EXPERIMENT"
+)
+
+var flags = map[string]bool{
+	// TestExperiment: false,
+}
+
+func IsEnabled(xName string) bool {
+	return flags[xName]
+}
 
 func Parse() error {
 	if err := readDotEnv(); err != nil {
 		return err
 	}
-	t := reflect.TypeOf(&Flags)
-	v := reflect.ValueOf(&Flags)
-	if t.Elem().Kind() != reflect.Struct {
-		return fmt.Errorf("expected struct, got %T", v.Kind())
-	}
-	for i := 0; i < t.Elem().NumField(); i++ {
-		fieldT := t.Elem().Field(i)
-		fieldV := v.Elem().Field(i)
-		if fieldT.Type.Kind() != reflect.Bool {
-			return fmt.Errorf("task: expected bool, got %T", fieldV.Kind())
-		}
-		if !fieldV.CanSet() {
-			return fmt.Errorf("task: cannot set experiment field: %q", fieldT.Name)
-		}
-		xName := fieldT.Tag.Get("x")
-		xEnabled := parseEnv(xName)
-		fieldV.SetBool(xEnabled)
+	for xName := range flags {
+		flags[xName] = parseEnv(xName)
 	}
 	return nil
 }
 
-func envName(xName string) string {
-	xName = strings.ToUpper(xName)
-	xName = strings.ReplaceAll(xName, " ", "_")
-	xName = fmt.Sprintf("%s%s", envPrefix, xName)
-	return xName
-}
-
 func parseEnv(xName string) bool {
-	return os.Getenv(envName(xName)) == "1"
+	envName := fmt.Sprintf("%s%s", envPrefix, xName)
+	return os.Getenv(envName) == "1"
 }
 
 func readDotEnv() error {
 	env, err := godotenv.Read()
 	if errors.Is(err, os.ErrNotExist) {
 		return nil
-	} else if err != nil {
+	}
+	if err != nil {
 		return err
 	}
 	// If the env var is an experiment, set it.

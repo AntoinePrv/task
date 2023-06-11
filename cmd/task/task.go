@@ -98,7 +98,6 @@ func run() error {
 	log.SetFlags(0)
 	log.SetOutput(os.Stderr)
 
-	// Experiments must be parsed before pflag.Parse() is called
 	if err := experiments.Parse(); err != nil {
 		return err
 	}
